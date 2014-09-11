@@ -1616,6 +1616,8 @@ status_t ACodec::setComponentRole(
         { MEDIA_MIMETYPE_AUDIO_EAC3_JOC,
             "audio_decoder.eac3_joc", NULL },
 #endif // DOLBY_END
+        { MEDIA_MIMETYPE_VIDEO_MPEG4_DP,
+            "video_decoder.mpeg4", NULL },
     };
 
     static const size_t kNumMimeToRole =
