@@ -165,7 +165,8 @@ status_t Camera2Client::dump(int fd, const Vector<String16>& args) {
     String8 result;
     result.appendFormat("Client2[%d] (%p) Client: %s PID: %d, dump:\n",
             mCameraId,
-            getRemoteCallback()->asBinder().get(),
+            (getRemoteCallback() != NULL ?
+                    (IInterface::asBinder(getRemoteCallback()).get()) : NULL),
             String8(mClientPackageName).string(),
             mClientPid);
     result.append("  State: ");
@@ -531,7 +532,7 @@ status_t Camera2Client::setPreviewTarget(
     sp<IBinder> binder;
     sp<ANativeWindow> window;
     if (bufferProducer != 0) {
-        binder = bufferProducer->asBinder();
+        binder = IInterface::asBinder(bufferProducer);
         // Using controlledByApp flag to ensure that the buffer queue remains in
         // async mode for the old camera API, where many applications depend
         // on that behavior.

@@ -42,8 +42,14 @@ CameraDeviceClientBase::CameraDeviceClientBase(
         int clientPid,
         uid_t clientUid,
         int servicePid) :
-    BasicClient(cameraService, remoteCallback->asBinder(), clientPackageName,
-                cameraId, cameraFacing, clientPid, clientUid, servicePid),
+    BasicClient(cameraService,
+            IInterface::asBinder(remoteCallback),
+            clientPackageName,
+            cameraId,
+            cameraFacing,
+            clientPid,
+            clientUid,
+            servicePid),
     mRemoteCallback(remoteCallback) {
 }
 
@@ -157,7 +163,7 @@ status_t CameraDeviceClient::submitRequestList(List<sp<CaptureRequest> > request
             if (surface == 0) continue;
 
             sp<IGraphicBufferProducer> gbp = surface->getIGraphicBufferProducer();
-            int idx = mStreamMap.indexOfKey(gbp->asBinder());
+            int idx = mStreamMap.indexOfKey(IInterface::asBinder(gbp));
 
             // Trying to submit request with surface that wasn't created
             if (idx == NAME_NOT_FOUND) {
@@ -327,7 +333,7 @@ status_t CameraDeviceClient::createStream(int width, int height, int format,
 
     // Don't create multiple streams for the same target surface
     {
-        ssize_t index = mStreamMap.indexOfKey(bufferProducer->asBinder());
+        ssize_t index = mStreamMap.indexOfKey(IInterface::asBinder(bufferProducer));
         if (index != NAME_NOT_FOUND) {
             ALOGW("%s: Camera %d: Buffer producer already has a stream for it "
                   "(ID %zd)",
@@ -364,7 +370,7 @@ status_t CameraDeviceClient::createStream(int width, int height, int format,
     sp<IBinder> binder;
     sp<ANativeWindow> anw;
     if (bufferProducer != 0) {
-        binder = bufferProducer->asBinder();
+        binder = IInterface::asBinder(bufferProducer);
         anw = new Surface(bufferProducer, useAsync);
     }
 
@@ -582,7 +588,8 @@ status_t CameraDeviceClient::dump(int fd, const Vector<String16>& args) {
     String8 result;
     result.appendFormat("CameraDeviceClient[%d] (%p) dump:\n",
             mCameraId,
-            getRemoteCallback()->asBinder().get());
+            (getRemoteCallback() != NULL ?
+                    IInterface::asBinder(getRemoteCallback()).get() : NULL) );
     result.appendFormat("  Current client: %s (PID %d, UID %u)\n",
             String8(mClientPackageName).string(),
             mClientPid, mClientUid);

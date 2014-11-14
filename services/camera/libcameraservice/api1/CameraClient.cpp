@@ -118,7 +118,8 @@ status_t CameraClient::dump(int fd, const Vector<String16>& args) {
     status_t rc = INVALID_OPERATION;
     size_t len = snprintf(buffer, SIZE, "Client[%d] (%p) PID: %d\n",
             mCameraId,
-            getRemoteCallback()->asBinder().get(),
+            (getRemoteCallback() != NULL ?
+                    IInterface::asBinder(getRemoteCallback()).get() : NULL),
             mClientPid);
     len = (len > SIZE - 1) ? SIZE - 1 : len;
     write(fd, buffer, len);
@@ -208,7 +209,7 @@ status_t CameraClient::connect(const sp<ICameraClient>& client) {
     }
 
     if (mRemoteCallback != 0 &&
-        (client->asBinder() == mRemoteCallback->asBinder())) {
+        (IInterface::asBinder(client) == IInterface::asBinder(mRemoteCallback))) {
         LOG1("Connect to the same client");
         return NO_ERROR;
     }
@@ -331,7 +332,7 @@ status_t CameraClient::setPreviewTarget(
     sp<IBinder> binder;
     sp<ANativeWindow> window;
     if (bufferProducer != 0) {
-        binder = bufferProducer->asBinder();
+        binder = IInterface::asBinder(bufferProducer);
         // Using controlledByApp flag to ensure that the buffer queue remains in
         // async mode for the old camera API, where many applications depend
         // on that behavior.

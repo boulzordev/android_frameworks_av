@@ -128,7 +128,8 @@ status_t Camera2ClientBase<TClientBase>::dump(int fd,
     String8 result;
     result.appendFormat("Camera2ClientBase[%d] (%p) PID: %d, dump:\n",
             TClientBase::mCameraId,
-            TClientBase::getRemoteCallback()->asBinder().get(),
+            (TClientBase::getRemoteCallback() != NULL ?
+                    IInterface::asBinder(TClientBase::getRemoteCallback()).get() : NULL),
             TClientBase::mClientPid);
     result.append("  State: ");
 
