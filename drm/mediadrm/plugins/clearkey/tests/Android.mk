@@ -31,7 +31,6 @@ LOCAL_C_INCLUDES := \
     bionic \
     external/gtest/include \
     external/jsmn \
-    external/openssl/include \
     external/stlport/stlport \
     frameworks/av/drm/mediadrm/plugins/clearkey \
     frameworks/av/include \
