@@ -459,7 +459,7 @@ int JetPlayer::clearQueue()
 //-------------------------------------------------------------------------------------------------
 void JetPlayer::dump()
 {
-    ALOGE("JetPlayer dump: JET file=%s", mEasJetFileLoc->path);
+    //ALOGE("JetPlayer dump: JET file=%s", mEasJetFileLoc->path);
 }
 
 void JetPlayer::dumpJetStatus(S_JET_STATUS* pJetStatus)
