@@ -1334,7 +1334,8 @@ ACodec::BufferInfo *ACodec::dequeueBufferFromNativeWindow() {
         }
 
         bool stale = false;
-        for (size_t i = mBuffers[kPortIndexOutput].size(); i-- > 0;) {
+        for (size_t i = mBuffers[kPortIndexOutput].size(); i > 0;) {
+            i--;
             BufferInfo *info = &mBuffers[kPortIndexOutput].editItemAt(i);
 
             if (info->mGraphicBuffer != NULL &&
@@ -1377,7 +1378,8 @@ ACodec::BufferInfo *ACodec::dequeueBufferFromNativeWindow() {
 
     // get oldest undequeued buffer
     BufferInfo *oldest = NULL;
-    for (size_t i = mBuffers[kPortIndexOutput].size(); i-- > 0;) {
+    for (size_t i = mBuffers[kPortIndexOutput].size(); i > 0;) {
+        i--;
         BufferInfo *info =
             &mBuffers[kPortIndexOutput].editItemAt(i);
         if (info->mStatus == BufferInfo::OWNED_BY_NATIVE_WINDOW &&
