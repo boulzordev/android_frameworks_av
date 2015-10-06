@@ -413,7 +413,7 @@ status_t CameraDeviceClient::createStream(int width, int height, int format,
     res = mDevice->createStream(anw, width, height, format, &streamId);
 
     if (res == OK) {
-        mStreamMap.add(bufferProducer->asBinder(), streamId);
+        mStreamMap.add(IInterface::asBinder(bufferProducer), streamId);
 
         ALOGV("%s: Camera %d: Successfully created a new stream ID %d",
               __FUNCTION__, mCameraId, streamId);

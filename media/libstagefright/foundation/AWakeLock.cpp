@@ -38,7 +38,7 @@ AWakeLock::AWakeLock() :
 
 AWakeLock::~AWakeLock() {
     if (mPowerManager != NULL) {
-        sp<IBinder> binder = mPowerManager->asBinder();
+        sp<IBinder> binder = IInterface::asBinder(mPowerManager);
         if (binder != NULL) {
             binder->unlinkToDeath(mDeathRecipient);
         }
