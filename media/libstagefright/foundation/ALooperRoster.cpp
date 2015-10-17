@@ -100,6 +100,22 @@ void ALooperRoster::unregisterStaleHandlers() {
     }
 }
 
+void ALooperRoster::getHandlerAndLooper(
+        ALooper::handler_id handlerID, wp<AHandler> *handler, wp<ALooper> *looper) {
+    Mutex::Autolock autoLock(mLock);
+
+    ssize_t index = mHandlers.indexOfKey(handlerID);
+
+    if (index < 0) {
+        handler->clear();
+        looper->clear();
+        return;
+    }
+
+    *handler = mHandlers.valueAt(index).mHandler;
+    *looper = mHandlers.valueAt(index).mLooper;
+}
+
 static void makeFourCC(uint32_t fourcc, char *s) {
     s[0] = (fourcc >> 24) & 0xff;
     if (s[0]) {

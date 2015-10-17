@@ -33,6 +33,9 @@ struct ALooperRoster {
     void unregisterHandler(ALooper::handler_id handlerID);
     void unregisterStaleHandlers();
 
+    void getHandlerAndLooper(
+            ALooper::handler_id handlerID, wp<AHandler> *handler, wp<ALooper> *looper);
+
     void dump(int fd, const Vector<String16>& args);
 
 private:
