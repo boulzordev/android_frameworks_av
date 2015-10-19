@@ -61,6 +61,22 @@ AudioSource::AudioSource(
       mNumClientOwnedBuffers(0) {
     ALOGV("sampleRate: %u, outSampleRate: %u, channelCount: %u",
             sampleRate, outSampleRate, channelCount);
+    init(inputSource, opPackageName, sampleRate, channelCount);
+}
+
+AudioSource::AudioSource(audio_source_t inputSource, uint32_t sampleRate, uint32_t channels)
+    : mStarted(false),
+      mSampleRate(sampleRate),
+      mOutSampleRate(sampleRate),
+      mPrevSampleTimeUs(0),
+      mFirstSampleTimeUs(-1ll),
+      mNumFramesReceived(0),
+      mNumClientOwnedBuffers(0) {
+    init(inputSource, String16("legacybackport"), sampleRate, channels);
+} 
+
+void AudioSource::init(audio_source_t inputSource, const String16 &opPackageName,
+        uint32_t sampleRate, uint32_t channelCount){
     CHECK(channelCount == 1 || channelCount == 2 || channelCount == 6);
     CHECK(sampleRate > 0);
 
@@ -95,6 +111,7 @@ AudioSource::AudioSource(
     } else {
         mInitCheck = status;
     }
+
 }
 
 AudioSource::~AudioSource() {

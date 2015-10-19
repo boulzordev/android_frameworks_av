@@ -175,6 +175,11 @@ sp<MediaCodec> MediaCodec::CreateByType(
     return ret == OK ? codec : NULL; // NULL deallocates codec.
 }
 
+sp<MediaCodec> MediaCodec::CreateByType(
+        const sp<ALooper> &looper, const char *mime, bool encoder, status_t *err) {
+    return CreateByType(looper, mime, encoder, err, kNoPid);
+}
+
 // static
 sp<MediaCodec> MediaCodec::CreateByComponentName(
         const sp<ALooper> &looper, const char *name, status_t *err, pid_t pid) {

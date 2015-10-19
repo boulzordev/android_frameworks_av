@@ -39,8 +39,17 @@ struct AudioSource : public MediaSource, public MediaBufferObserver {
             uint32_t sampleRate,
             uint32_t channels,
             uint32_t outSampleRate = 0);
+    AudioSource(
+            audio_source_t inputSource,
+            uint32_t sampleRate,
+            uint32_t channels);
 
     status_t initCheck() const;
+    void init(
+            audio_source_t inputSource,
+            const String16 &opPackageName,
+            uint32_t sampleRate,
+            uint32_t channels);
 
     virtual status_t start(MetaData *params = NULL);
     virtual status_t stop() { return reset(); }
