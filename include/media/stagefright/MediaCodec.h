@@ -67,9 +67,6 @@ struct MediaCodec : public AHandler {
     static sp<MediaCodec> CreateByType(
             const sp<ALooper> &looper, const char *mime, bool encoder, status_t *err = NULL,
             pid_t pid = kNoPid);
-    static sp<MediaCodec> CreateByType(
-            const sp<ALooper> &looper, const char *mime, bool encoder, status_t *err = NULL
-            );
 
     static sp<MediaCodec> CreateByComponentName(
             const sp<ALooper> &looper, const char *name, status_t *err = NULL,

@@ -175,9 +175,10 @@ sp<MediaCodec> MediaCodec::CreateByType(
     return ret == OK ? codec : NULL; // NULL deallocates codec.
 }
 
-sp<MediaCodec> MediaCodec::CreateByType(
-        const sp<ALooper> &looper, const char *mime, bool encoder, status_t *err) {
-    return CreateByType(looper, mime, encoder, err, kNoPid);
+extern "C" void _ZN7android10MediaCodec12CreateByTypeERKNS_2spINS_7ALooperEEEPKcbPii(void *retval, const sp<ALooper>&looper, const char *mime, bool encoder, status_t*err, pid_t pid);
+
+extern "C" void _ZN7android10MediaCodec12CreateByTypeERKNS_2spINS_7ALooperEEEPKcbPi(void *retval, const sp<ALooper>&looper, const char *mime, bool encoder, status_t*err){
+    return _ZN7android10MediaCodec12CreateByTypeERKNS_2spINS_7ALooperEEEPKcbPii(retval, looper, mime, encoder, err, MediaCodec::kNoPid);
 }
 
 // static
