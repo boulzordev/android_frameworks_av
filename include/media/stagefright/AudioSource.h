@@ -55,8 +55,6 @@ struct AudioSource : public MediaSource, public MediaBufferObserver {
     virtual status_t stop() { return reset(); }
     virtual sp<MetaData> getFormat();
 
-    virtual status_t pause();
-
     // Returns the maximum amplitude since last call.
     int16_t getMaxAmplitude();
 
@@ -122,6 +120,10 @@ protected:
 
     AudioSource(const AudioSource &);
     AudioSource &operator=(const AudioSource &);
+
+public:
+    virtual status_t pause();
+
 };
 
 }  // namespace android
