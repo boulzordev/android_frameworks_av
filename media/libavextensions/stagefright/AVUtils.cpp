@@ -171,6 +171,16 @@ const char *AVUtils::getCustomCodecsLocation() {
     return "/etc/media_codecs.xml";
 }
 
+void AVUtils::setIntraPeriod(
+        int, int, const sp<IOMX>,
+        IOMX::node_id) {
+    return;
+}
+
+const char *AVUtils::getCustomCodecsPerformanceLocation() {
+    return "/etc/media_codecs_performance.xml";
+}
+
 // ----- NO TRESSPASSING BEYOND THIS LINE ------
 AVUtils::AVUtils() {}
 

@@ -109,6 +109,7 @@ public:
     struct SetSurfaceAction;
     struct ResumeDecoderAction;
     struct FlushDecoderAction;
+    struct InstantiateDecoderAction;
     struct PostMessageAction;
     struct SimpleAction;
 
@@ -244,7 +245,7 @@ protected:
     void finishFlushIfPossible();
 
     void onStart(int64_t startPositionUs = -1);
-    void onResume();
+    virtual void onResume();
     void onPause();
 
     bool audioDecoderStillNeeded();
@@ -279,6 +280,8 @@ protected:
     void sendTimedTextData(const sp<ABuffer> &buffer);
 
     void writeTrackInfo(Parcel* reply, const sp<AMessage> format) const;
+
+    void tearDownPCMOffload(const sp<AMessage> &msg);
 
     DISALLOW_EVIL_CONSTRUCTORS(NuPlayer);
 };
