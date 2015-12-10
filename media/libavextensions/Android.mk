@@ -23,7 +23,7 @@ ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS),true)
 endif
 
 LOCAL_MODULE:= libavextensions
-LOCAL_CLANG := false
+LOCAL_CFLAGS += -DLOG_NDEBUG=0
 
 LOCAL_MODULE_TAGS := optional
 
@@ -42,7 +42,8 @@ LOCAL_C_INCLUDES:= \
         $(TOP)/frameworks/native/include/media/hardware \
         $(TOP)/frameworks/native/include/media/openmax \
         $(TOP)/external/flac/include \
-        $(TOP)/hardware/qcom/media/mm-core/inc
+        $(TOP)/system/media/audio_utils/include \
+        $(TOP)/$(call project-path-for,qcom-media)/mm-core/inc
 
 LOCAL_CFLAGS += -Wno-multichar -Werror
 
@@ -51,7 +52,7 @@ ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS),true)
 endif
 
 LOCAL_MODULE:= libavmediaextentions
-LOCAL_CLANG := false
+LOCAL_CFLAGS += -DLOG_NDEBUG=0
 
 LOCAL_MODULE_TAGS := optional
 
@@ -77,6 +78,8 @@ LOCAL_C_INCLUDES:= \
         $(TOP)/frameworks/native/include/media/openmax \
         $(TOP)/external/flac/include \
         $(TOP)/hardware/qcom/media/mm-core/inc
+        $(TOP)/system/media/audio_utils/include \
+        $(TOP)/$(call project-path-for,qcom-media)/mm-core/inc
 
 LOCAL_CFLAGS += -Wno-multichar -Werror
 
@@ -89,7 +92,7 @@ ifeq ($(TARGET_BOARD_PLATFORM),msm8974)
 endif
 
 LOCAL_MODULE:= libavmediaserviceextensions
-LOCAL_CLANG := false
+LOCAL_CFLAGS += -DLOG_NDEBUG=0
 
 LOCAL_MODULE_TAGS := optional
 
