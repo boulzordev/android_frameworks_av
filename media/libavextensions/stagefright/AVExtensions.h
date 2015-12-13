@@ -36,10 +36,10 @@
 #include <media/mediarecorder.h>
 #include <media/IOMX.h>
 #include "ESQueue.h"
+#include <media/AudioParameter.h>
 
 namespace android {
 
-class AudioParameter;
 class MetaData;
 class MediaExtractor;
 class MPEG4Writer;
