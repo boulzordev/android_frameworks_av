@@ -35,7 +35,7 @@ ifeq ($(call is-vendor-board-platform,QCOM),true)
 ifeq ($(strip $(AUDIO_FEATURE_ENABLED_FLAC_OFFLOAD)),true)
 LOCAL_CFLAGS     += -DFLAC_OFFLOAD_ENABLED
 endif
-ifeq ($(strip $(AUDIO_FEATURE_ENABLED_PROXY_DEVICE)),true)
+ifneq ($(strip $(AUDIO_FEATURE_ENABLED_PROXY_DEVICE)),false)
 LOCAL_CFLAGS     += -DAUDIO_EXTN_AFE_PROXY_ENABLED
 endif
 ifeq ($(strip $(AUDIO_FEATURE_ENABLED_WMA_OFFLOAD)),true)
