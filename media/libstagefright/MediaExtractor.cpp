@@ -57,7 +57,8 @@ uint32_t MediaExtractor::flags() const {
 // static
 sp<MediaExtractor> MediaExtractor::Create(
         const sp<DataSource> &source, const char *mime,
-        const uint32_t flags) {
+        const uint32_t flags, const sp<AMessage> *prevMeta) {
+
     sp<AMessage> meta;
 
     bool secondPass = false;
@@ -78,6 +79,8 @@ retry:
         mime = tmp.string();
         ALOGV("Autodetected media content as '%s' with confidence %.2f",
              mime, confidence);
+    } else if (prevMeta != NULL) {
+        meta = *prevMeta;
     }
 
     bool isDrm = false;
