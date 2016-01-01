@@ -42,10 +42,6 @@
 #include "ListenService.h"
 #endif
 
-#ifdef AUDIO_LISTEN_ENABLED
-#include "ListenService.h"
-#endif
-
 using namespace android;
 
 int main(int argc __unused, char** argv)

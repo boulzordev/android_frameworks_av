@@ -12,6 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was modified by Dolby Laboratories, Inc. The portions of the
+ * code that are surrounded by "DOLBY..." are copyrighted and
+ * licensed separately, as follows:
+ *
+ *  (C) 2014-2015 Dolby Laboratories, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 
 //#define LOG_NDEBUG 0
@@ -202,7 +221,7 @@ status_t convertMetaDataToMessage(
     }
 
     int32_t fps;
-    if (meta->findInt32(kKeyFrameRate, &fps)) {
+    if (meta->findInt32(kKeyFrameRate, &fps) && fps > 0) {
         msg->setInt32("frame-rate", fps);
     }
 
@@ -219,8 +238,10 @@ status_t convertMetaDataToMessage(
 
         const uint8_t *ptr = (const uint8_t *)data;
 
-        CHECK(size >= 7);
-        CHECK_EQ((unsigned)ptr[0], 1u);  // configurationVersion == 1
+        if (size < 7 || ptr[0] != 1) {  // configurationVersion == 1
+            ALOGE("b/23680780");
+            return BAD_VALUE;
+        }
         uint8_t profile __unused = ptr[1];
         uint8_t level __unused = ptr[3];
 
@@ -246,7 +267,10 @@ status_t convertMetaDataToMessage(
         buffer->setRange(0, 0);
 
         for (size_t i = 0; i < numSeqParameterSets; ++i) {
-            CHECK(size >= 2);
+            if (size < 2) {
+                ALOGE("b/23680780");
+                return BAD_VALUE;
+            }
             size_t length = U16_AT(ptr);
 
             ptr += 2;
@@ -275,13 +299,19 @@ status_t convertMetaDataToMessage(
         }
         buffer->setRange(0, 0);
 
-        CHECK(size >= 1);
+        if (size < 1) {
+            ALOGE("b/23680780");
+            return BAD_VALUE;
+        }
         size_t numPictureParameterSets = *ptr;
         ++ptr;
         --size;
 
         for (size_t i = 0; i < numPictureParameterSets; ++i) {
-            CHECK(size >= 2);
+            if (size < 2) {
+                ALOGE("b/23680780");
+                return BAD_VALUE;
+            }
             size_t length = U16_AT(ptr);
 
             ptr += 2;
@@ -306,8 +336,7 @@ status_t convertMetaDataToMessage(
         const uint8_t *ptr = (const uint8_t *)data;
 
         CHECK(size >= 7);
-        //CHECK_EQ((unsigned)ptr[0], 1u);  // configurationVersion == 1
-        if (size < 23) {  // configurationVersion == 1
+        if (size < 23 || ptr[0] > 1) {  // configurationVersion == 1
             ALOGE("b/23680780 size=%zd ptr0=%x", size, ptr[0]);
             return BAD_VALUE;
         }
@@ -329,6 +358,10 @@ status_t convertMetaDataToMessage(
         buffer->setRange(0, 0);
 
         for (i = 0; i < numofArrays; i++) {
+            if (size < 3) {
+                ALOGE("b/23680780");
+                return BAD_VALUE;
+            }
             ptr += 1;
             size -= 1;
 
@@ -339,7 +372,10 @@ status_t convertMetaDataToMessage(
             size -= 2;
 
             for (j = 0; j < numofNals; j++) {
-                CHECK(size >= 2);
+                if (size < 2) {
+                    ALOGE("b/23680780");
+                    return BAD_VALUE;
+                }
                 size_t length = U16_AT(ptr);
 
                 ptr += 2;
@@ -670,7 +706,7 @@ void convertMessageToMetaData(const sp<AMessage> &msg, sp<MetaData> &meta) {
     }
 
     int32_t fps;
-    if (msg->findInt32("frame-rate", &fps)) {
+    if (msg->findInt32("frame-rate", &fps) && fps > 0) {
         meta->setInt32(kKeyFrameRate, fps);
     }
 
@@ -776,6 +812,11 @@ static const struct mime_conv_t mimeLookup[] = {
     { MEDIA_MIMETYPE_AUDIO_AAC,         AUDIO_FORMAT_AAC },
     { MEDIA_MIMETYPE_AUDIO_VORBIS,      AUDIO_FORMAT_VORBIS },
     { MEDIA_MIMETYPE_AUDIO_OPUS,        AUDIO_FORMAT_OPUS},
+#ifdef DOLBY_ENABLE
+    { MEDIA_MIMETYPE_AUDIO_AC3,         AUDIO_FORMAT_AC3},
+    { MEDIA_MIMETYPE_AUDIO_EAC3,        AUDIO_FORMAT_E_AC3},
+    { MEDIA_MIMETYPE_AUDIO_EAC3_JOC,    AUDIO_FORMAT_E_AC3},
+#endif // DOLBY_END
     { 0, AUDIO_FORMAT_INVALID }
 };
 
@@ -875,7 +916,7 @@ bool canOffloadStream(const sp<MetaData>& meta, bool hasVideo,
     info.sample_rate = srate;
 
     int32_t cmask = 0;
-    if (!meta->findInt32(kKeyChannelMask, &cmask)) {
+    if (!meta->findInt32(kKeyChannelMask, &cmask) || 0 == cmask) {
         ALOGV("track of type '%s' does not publish channel mask", mime);
 
         // Try a channel count instead
