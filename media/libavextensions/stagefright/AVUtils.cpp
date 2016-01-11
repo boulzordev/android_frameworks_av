@@ -1124,6 +1124,13 @@ int32_t AVUtils::HFR::getHFRCapabilities(
 void AVUtils::extractCustomCameraKeys(
         const CameraParameters& params, sp<MetaData> &meta) {
     mHFR.setHFRIfEnabled(params, meta);
+
+const char *AVUtils::getCustomCodecsPerformanceLocation() {
+    return "/etc/media_codecs_performance.xml";
+}
+
+bool AVUtils::IsHevcIDR(const sp<ABuffer> &) {
+   return false;
 }
 
 // ----- NO TRESSPASSING BEYOND THIS LINE ------

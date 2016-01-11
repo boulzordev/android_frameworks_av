@@ -80,6 +80,10 @@ struct AVMediaUtils {
         return false;
     }
 
+    virtual bool AudioTrackIsTrackOffloaded(audio_io_handle_t /*output*/) {
+        return false;
+    }
+
     virtual sp<MediaRecorder> createMediaRecorder(const String16& opPackageName);
     virtual void writeCustomData(
             Parcel * /* reply */, void * /* buffer_data */) {}

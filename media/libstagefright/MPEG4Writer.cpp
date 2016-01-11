@@ -1144,7 +1144,7 @@ off64_t MPEG4Writer::addSample_l(MediaBuffer *buffer) {
     return old_offset;
 }
 
-static void StripStartcode(MediaBuffer *buffer) {
+void MPEG4Writer::StripStartcode(MediaBuffer *buffer) {
     if (buffer->range_length() < 4) {
         return;
     }
@@ -2397,7 +2397,11 @@ status_t MPEG4Writer::Track::threadEntry() {
                 cttsSampleCount = 0;      // No sample in ctts box is pending
             } else {
                 if (currCttsOffsetTimeTicks != lastCttsOffsetTimeTicks) {
-                    addOneCttsTableEntry(cttsSampleCount, lastCttsOffsetTimeTicks);
+                    // cttsSampleCount is 0 after writing the initial ctts entry
+                    // Avoid writing entry with 0 sample count
+                    if (cttsSampleCount != 0) {
+                        addOneCttsTableEntry(cttsSampleCount, lastCttsOffsetTimeTicks);
+                    }
                     lastCttsOffsetTimeTicks = currCttsOffsetTimeTicks;
                     cttsSampleCount = 1;  // One sample in ctts box is pending
                 } else {

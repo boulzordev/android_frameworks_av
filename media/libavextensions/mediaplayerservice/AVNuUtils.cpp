@@ -340,6 +340,10 @@ void AVNuUtils::addFlagsInMeta(const sp<ABuffer> & /*buffer*/,
 }
 #endif
 
+void AVNuUtils::overWriteAudioOutputFormat(
+        sp <AMessage> & /*dst*/, const sp <AMessage> & /*src*/) {
+}
+
 uint32_t AVNuUtils::getFlags() {
     return 0;
 }

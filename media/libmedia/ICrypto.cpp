@@ -302,6 +302,7 @@ status_t BnCrypto::onTransact(
                 AVMediaUtils::get()->readCustomData(&data, &secureBufferId);
             } else {
                 dstPtr = calloc(1, totalSize);
+                CHECK(dstPtr != NULL);
             }
 
             AString errorDetailMsg;

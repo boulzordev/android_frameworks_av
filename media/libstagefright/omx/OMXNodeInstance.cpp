@@ -205,6 +205,7 @@ OMXNodeInstance::OMXNodeInstance(
     mDebugLevelBumpPendingBuffers[1] = 0;
     mMetadataType[0] = kMetadataBufferTypeInvalid;
     mMetadataType[1] = kMetadataBufferTypeInvalid;
+    atomic_store(&mDying, false);
     mIsSecure = AString(name).endsWith(".secure");
     atomic_store(&mDying, false);
 }

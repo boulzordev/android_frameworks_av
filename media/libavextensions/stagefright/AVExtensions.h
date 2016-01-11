@@ -37,6 +37,7 @@
 #include <media/IOMX.h>
 #include <media/AudioParameter.h>
 #include <media/stagefright/MetaData.h>
+#include "ESQueue.h"
 
 namespace android {
 
@@ -59,6 +60,7 @@ class ICameraRecordingProxy;
 class String16;
 class IGraphicBufferProducer;
 struct Size;
+class MPEG4Writer;
 
 /*
  * Factory to create objects of base-classes in libstagefright
@@ -77,6 +79,8 @@ struct AVFactory {
             bool disconnectAtHighwatermark = false);
     virtual MediaHTTP* createMediaHTTP(
             const sp<IMediaHTTPConnection> &conn);
+    virtual ElementaryStreamQueue* createESQueue(
+            ElementaryStreamQueue::Mode mode, uint32_t flags = 0);
 
     virtual AudioSource* createAudioSource(
             audio_source_t inputSource,
@@ -107,6 +111,8 @@ struct AVFactory {
             const sp<IGraphicBufferProducer>& surface,
             int64_t timeBetweenFrameCaptureUs,
             bool storeMetaDataInVideoBuffers = true);
+
+    virtual MPEG4Writer *CreateMPEG4Writer(int fd);
     // ----- NO TRESSPASSING BEYOND THIS LINE ------
     DECLARE_LOADABLE_SINGLETON(AVFactory);
 };
@@ -227,6 +233,7 @@ struct AVUtils {
     virtual bool isAudioMuxFormatSupported(const char *mime);
     virtual void cacheCaptureBuffers(sp<ICamera> camera, video_encoder encoder);
     virtual const char *getCustomCodecsLocation();
+    virtual const char *getCustomCodecsPerformanceLocation();
 
     virtual void setIntraPeriod(
                 int nPFrames, int nBFrames, const sp<IOMX> OMXhandle,
@@ -284,6 +291,8 @@ struct AVUtils {
     virtual inline HFR& HFRUtils() {
          return mHFR;
     }
+    // Used by ATSParser
+    virtual bool IsHevcIDR(const sp<ABuffer> &accessUnit);
 
 private:
     HEVCMuxer mHEVCMuxer;

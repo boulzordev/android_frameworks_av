@@ -1583,9 +1583,8 @@ void NuPlayer::Renderer::onResume() {
     }
 
     if (mHasAudio) {
-        status_t status = NO_ERROR;
         cancelAudioOffloadPauseTimeout();
-        status = mAudioSink->start();
+        status_t status = mAudioSink->start();
         if (offloadingAudio() && status != NO_ERROR && status != INVALID_OPERATION) {
             ALOGD("received error :%d on resume for offload track posting TEAR_DOWN event",status);
             notifyAudioTearDown();
