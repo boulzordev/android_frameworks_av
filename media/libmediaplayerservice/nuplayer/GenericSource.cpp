@@ -128,6 +128,7 @@ status_t NuPlayer::GenericSource::setDataSource(
 
 status_t NuPlayer::GenericSource::setDataSource(const sp<DataSource>& source) {
     resetDataSource();
+    Mutex::Autolock _l(mSourceLock);
     mDataSource = source;
     return OK;
 }

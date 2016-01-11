@@ -147,7 +147,6 @@ private:
     sp<IOMXObserver> mObserver;
     atomic_bool mDying;
     bool mIsSecure;
-    atomic_bool mDying;
 
     // Lock only covers mGraphicBufferSource.  We can't always use mLock
     // because of rare instances where we'd end up locking it recursively.
